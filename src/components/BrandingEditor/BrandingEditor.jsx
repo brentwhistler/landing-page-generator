@@ -1,10 +1,8 @@
 import React from 'react';
 import { useTemplate } from '../../hooks/useTemplateContext';
-// import { ScrollArea } from '../ui/scroll-area';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Label } from '../ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { TAILWIND_COLORS, TAILWIND_SHADES, FONT_FAMILIES, TEXT_SIZES } from '../../types/template';
+import { Input } from '../ui/input';
 
 export function BrandingEditor() {
   const { state, actions } = useTemplate();
@@ -20,51 +18,32 @@ export function BrandingEditor() {
     });
   };
 
-  const ColorSelector = ({ label, value, onChange, description }) => {
-    const [color, shade] = value.split('-');
-    
+  const ColorPicker = ({ label, value, onChange, description }) => {
     return (
       <div className="space-y-2">
         <Label>{label}</Label>
         {description && (
           <p className="text-xs text-muted-foreground">{description}</p>
         )}
-        <div className="flex space-x-2">
-          <Select value={color} onValueChange={(newColor) => onChange(`${newColor}-${shade}`)}>
-            <SelectTrigger className="flex-1">
-              <SelectValue placeholder="Color" />
-            </SelectTrigger>
-            <SelectContent>
-              {TAILWIND_COLORS.map((colorName) => (
-                <SelectItem key={colorName} value={colorName}>
-                  <div className="flex items-center space-x-2">
-                    <div 
-                      className={`w-4 h-4 rounded bg-${colorName}-500`}
-                      style={{ backgroundColor: `var(--${colorName}-500)` }}
-                    />
-                    <span className="capitalize">{colorName}</span>
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          
-          <Select value={shade} onValueChange={(newShade) => onChange(`${color}-${newShade}`)}>
-            <SelectTrigger className="w-20">
-              <SelectValue placeholder="Shade" />
-            </SelectTrigger>
-            <SelectContent>
-              {TAILWIND_SHADES.map((shadeName) => (
-                <SelectItem key={shadeName} value={shadeName}>
-                  {shadeName}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <div className="flex items-center space-x-3">
+          <Input
+            type="color"
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            className="w-16 h-10 p-1 border rounded cursor-pointer"
+          />
+          <Input
+            type="text"
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder="#000000"
+            className="flex-1 font-mono text-sm"
+          />
         </div>
         <div className="flex items-center space-x-2 text-xs text-muted-foreground">
           <div 
-            className={`w-6 h-6 rounded border bg-${value}`}
+            className="w-6 h-6 rounded border"
+            style={{ backgroundColor: value }}
           />
           <span className="font-mono">{value}</span>
         </div>
@@ -77,7 +56,7 @@ export function BrandingEditor() {
       <div className="p-6 border-b">
         <h2 className="text-2xl font-semibold">Branding & Styling</h2>
         <p className="text-muted-foreground">
-          Customize colors, fonts, and visual styling for your landing page
+          Customize colors for your landing page using hex color codes
         </p>
       </div>
 
@@ -88,104 +67,62 @@ export function BrandingEditor() {
             <CardHeader>
               <CardTitle>Color Scheme</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <ColorSelector
+            <CardContent className="space-y-6">
+              <ColorPicker
                 label="Primary Color"
                 value={branding.primaryColor}
                 onChange={(value) => handleChange('primaryColor', value)}
                 description="Main brand color for buttons and accents"
               />
               
-              <ColorSelector
+              <ColorPicker
                 label="Primary Hover Color"
                 value={branding.primaryColorHover}
                 onChange={(value) => handleChange('primaryColorHover', value)}
                 description="Color when hovering over primary elements"
               />
               
-              <ColorSelector
+              <ColorPicker
                 label="Secondary Color"
                 value={branding.secondaryColor}
                 onChange={(value) => handleChange('secondaryColor', value)}
                 description="Secondary accent color"
               />
               
-              <ColorSelector
+              <ColorPicker
                 label="Background Color"
                 value={branding.bgColor}
                 onChange={(value) => handleChange('bgColor', value)}
                 description="Main page background color"
               />
               
-              <ColorSelector
+              <ColorPicker
                 label="Section Background"
                 value={branding.sectionBgAlt}
                 onChange={(value) => handleChange('sectionBgAlt', value)}
                 description="Alternate background for sections"
               />
               
-              <ColorSelector
+              <ColorPicker
                 label="Text Color"
                 value={branding.textColor}
                 onChange={(value) => handleChange('textColor', value)}
                 description="Main text color"
               />
-            </CardContent>
-          </Card>
-
-          {/* Typography */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Typography</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label>Font Family</Label>
-                <Select value={branding.fontFamily} onValueChange={(value) => handleChange('fontFamily', value)}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {FONT_FAMILIES.map((font) => (
-                      <SelectItem key={font} value={font}>
-                        <span className={font}>{font.replace('font-', '').toUpperCase()}</span>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label>Heading Size</Label>
-                <Select value={branding.headingSize} onValueChange={(value) => handleChange('headingSize', value)}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {TEXT_SIZES.map((size) => (
-                      <SelectItem key={size} value={size}>
-                        <span className={size}>{size}</span>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label>Body Text Size</Label>
-                <Select value={branding.bodySize} onValueChange={(value) => handleChange('bodySize', value)}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {TEXT_SIZES.map((size) => (
-                      <SelectItem key={size} value={size}>
-                        <span className={size}>{size}</span>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              
+              <ColorPicker
+                label="Footer Background Color"
+                value={branding.footerBgColor}
+                onChange={(value) => handleChange('footerBgColor', value)}
+                description="Footer background color (defaults to secondary color)"
+              />
+              
+              <ColorPicker
+                label="Footer Text Color"
+                value={branding.footerTextColor}
+                onChange={(value) => handleChange('footerTextColor', value)}
+                description="Footer text and link colors"
+              />
             </CardContent>
           </Card>
 
@@ -195,16 +132,104 @@ export function BrandingEditor() {
               <CardTitle>Style Preview</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className={`p-6 rounded-lg bg-${branding.bgColor} text-${branding.textColor} ${branding.fontFamily}`}>
-                <h1 className={`${branding.headingSize} font-bold mb-4`}>
+              <div 
+                className="p-6 rounded-lg"
+                style={{ 
+                  backgroundColor: branding.bgColor, 
+                  color: branding.textColor 
+                }}
+              >
+                <h1 className="text-4xl font-bold mb-4">
                   Sample Heading
                 </h1>
-                <p className={`${branding.bodySize} mb-4`}>
+                <p className="text-lg mb-4">
                   This is how your body text will look with the current styling settings.
                 </p>
-                <button className={`bg-${branding.primaryColor} hover:bg-${branding.primaryColorHover} text-white px-4 py-2 rounded transition-colors`}>
+                <button 
+                  className="px-4 py-2 rounded transition-colors text-white"
+                  style={{ 
+                    backgroundColor: branding.primaryColor,
+                    ':hover': { backgroundColor: branding.primaryColorHover }
+                  }}
+                >
                   Sample Button
                 </button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Color Palette */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Color Palette</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium">Primary</Label>
+                  <div className="flex items-center space-x-2">
+                    <div 
+                      className="w-8 h-8 rounded border"
+                      style={{ backgroundColor: branding.primaryColor }}
+                    />
+                    <span className="text-sm font-mono">{branding.primaryColor}</span>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium">Secondary</Label>
+                  <div className="flex items-center space-x-2">
+                    <div 
+                      className="w-8 h-8 rounded border"
+                      style={{ backgroundColor: branding.secondaryColor }}
+                    />
+                    <span className="text-sm font-mono">{branding.secondaryColor}</span>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium">Background</Label>
+                  <div className="flex items-center space-x-2">
+                    <div 
+                      className="w-8 h-8 rounded border"
+                      style={{ backgroundColor: branding.bgColor }}
+                    />
+                    <span className="text-sm font-mono">{branding.bgColor}</span>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium">Text</Label>
+                  <div className="flex items-center space-x-2">
+                    <div 
+                      className="w-8 h-8 rounded border"
+                      style={{ backgroundColor: branding.textColor }}
+                    />
+                    <span className="text-sm font-mono">{branding.textColor}</span>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium">Footer Background</Label>
+                  <div className="flex items-center space-x-2">
+                    <div 
+                      className="w-8 h-8 rounded border"
+                      style={{ backgroundColor: branding.footerBgColor }}
+                    />
+                    <span className="text-sm font-mono">{branding.footerBgColor}</span>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium">Footer Text</Label>
+                  <div className="flex items-center space-x-2">
+                    <div 
+                      className="w-8 h-8 rounded border"
+                      style={{ backgroundColor: branding.footerTextColor }}
+                    />
+                    <span className="text-sm font-mono">{branding.footerTextColor}</span>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>

@@ -7,14 +7,13 @@
   },
   "branding": {
     "primaryColor": "#ff7e00",
-    "primaryColorHover": "indigo-700",
+    "primaryColorHover": "#e67300",
     "secondaryColor": "#4b0082",
-    "bgColor": "gray-50",
-    "sectionBgAlt": "gray-100",
-    "textColor": "gray-800",
-    "fontFamily": "font-sans",
-    "headingSize": "text-4xl",
-    "bodySize": "text-lg"
+    "bgColor": "#f9fafb",
+    "sectionBgAlt": "#f3f4f6",
+    "textColor": "#1f2937",
+    "footerBgColor": "#4b0082",
+    "footerTextColor": "#ffffff"
   },
   "hero": {
     "headline": "The Operating System for Business Coaches Who Want to Scale",
@@ -22,7 +21,10 @@
     "ctaText": "Apply to Become a Founding Coach",
     "ctaLink": "#apply",
     "note": "Only 20 seats available for the Steering Committee - Lifetime perks included.",
-    "heroImage": "/assets/hero-image.png"
+    "heroImage": "/assets/hero-image.webp"
+  },
+  "featuresSection": {
+    "title": "What You Get with BuildRunKit"
   },
   "features": [
     {
@@ -46,6 +48,9 @@
       "icon": "/assets/icons/api.svg"
     }
   ],
+  "howItWorksSection": {
+    "title": "How It Works"
+  },
   "howItWorks": [
     "Apply to become a Founding Coach.",
     "Get onboarded with premium templates and journeys.",
@@ -67,7 +72,13 @@
   "socialLinks": {
     "twitter": "https://x.com/buildrunkit",
     "linkedin": "https://linkedin.com/company/buildrunkit",
-    "facebook": "https://facebook.com/buildrunkit"
+    "facebook": "https://facebook.com/buildrunkit",
+    "whatsapp": "https://wa.me/1234567890",
+    "pinterest": "https://pinterest.com/buildrunkit",
+    "instagram": "https://instagram.com/buildrunkit",
+    "tiktok": "https://tiktok.com/@buildrunkit",
+    "mastodon": "https://mastodon.social/@buildrunkit",
+    "bluesky": "https://bsky.app/profile/buildrunkit.bsky.social"
   },
   "footer": {
     "copyright": "© 2025 BuildRunKit. All rights reserved."

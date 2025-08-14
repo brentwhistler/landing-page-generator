@@ -1,12 +1,22 @@
 import React from 'react';
 import { useTemplate } from '../../hooks/useTemplateContext';
 import { Input } from '../ui/input';
+import { Label } from '../ui/label';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Plus, Trash2, GripVertical } from 'lucide-react';
 
-export function HowItWorksSection({ data }) {
+export function HowItWorksSection({ data, sectionData }) {
   const { actions } = useTemplate();
+
+  const handleSectionTitleChange = (value) => {
+    actions.updateTemplateData({
+      howItWorksSection: {
+        ...sectionData,
+        title: value
+      }
+    });
+  };
 
   const handleChange = (index, value) => {
     const updatedSteps = [...data];
@@ -55,6 +65,16 @@ export function HowItWorksSection({ data }) {
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="section-title">Section Title</Label>
+          <Input
+            id="section-title"
+            value={sectionData?.title || ''}
+            onChange={(e) => handleSectionTitleChange(e.target.value)}
+            placeholder="How It Works Section Title"
+          />
+        </div>
+        
         {data.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
             <p>No steps added yet.</p>

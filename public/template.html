@@ -8,8 +8,59 @@
   <link rel="icon" href="{{site.favicon}}">
   {{site.headerElements}}
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <style>
+    .custom-bg { background-color: {{branding.bgColor}}; }
+    .custom-section-bg { background-color: {{branding.sectionBgAlt}}; }
+    .custom-text { color: {{branding.textColor}}; }
+    .custom-primary { background-color: {{branding.primaryColor}}; }
+    .custom-primary-hover { background-color: {{branding.primaryColorHover}}; }
+    .custom-secondary { background-color: {{branding.secondaryColor}}; }
+    .custom-primary-text { color: {{branding.primaryColor}}; }
+    .custom-primary-bg-10 { background-color: {{branding.primaryColor}}1a; }
+    .custom-gradient { background: linear-gradient(to right, {{branding.primaryColor}}1a, {{branding.secondaryColor}}1a); }
+    
+    /* Responsive grid for features - max 4 columns */
+    .features-grid {
+      grid-template-columns: repeat(1, 1fr);
+    }
+    @media (min-width: 640px) {
+      .features-grid {
+        grid-template-columns: repeat(min(2, var(--features-count, 4)), 1fr);
+      }
+    }
+    @media (min-width: 1024px) {
+      .features-grid {
+        grid-template-columns: repeat(min(3, var(--features-count, 4)), 1fr);
+      }
+    }
+    @media (min-width: 1280px) {
+      .features-grid {
+        grid-template-columns: repeat(min(4, var(--features-count, 4)), 1fr);
+      }
+    }
+    
+    /* Responsive grid for how it works - max 5 columns */
+    .how-it-works-grid {
+      grid-template-columns: repeat(1, 1fr);
+    }
+    @media (min-width: 640px) {
+      .how-it-works-grid {
+        grid-template-columns: repeat(min(2, var(--how-it-works-count, 5)), 1fr);
+      }
+    }
+    @media (min-width: 1024px) {
+      .how-it-works-grid {
+        grid-template-columns: repeat(min(3, var(--how-it-works-count, 5)), 1fr);
+      }
+    }
+    @media (min-width: 1280px) {
+      .how-it-works-grid {
+        grid-template-columns: repeat(min(5, var(--how-it-works-count, 5)), 1fr);
+      }
+    }
+  </style>
 </head>
-<body class="bg-{{branding.bgColor}} text-{{branding.textColor}} {{branding.fontFamily}}">
+<body class="custom-bg custom-text font-sans">
 
   <!-- Hero -->
   <section class="bg-white shadow-md">
@@ -22,10 +73,10 @@
       <!-- Hero content - left side -->
       <div class="grid lg:grid-cols-2 gap-12 items-center">
         <div class="text-left">
-          <h1 class="{{branding.headingSize}} font-bold mb-6 leading-tight">{{hero.headline}}</h1>
-          <p class="{{branding.bodySize}} mb-8 text-gray-700 leading-relaxed">{{hero.subheadline}}</p>
+          <h1 class="text-5xl font-bold mb-6 leading-tight custom-text">{{hero.headline}}</h1>
+          <p class="text-lg mb-8 text-gray-700 leading-relaxed">{{hero.subheadline}}</p>
           <div class="space-y-4">
-            <a href="{{hero.ctaLink}}" class="inline-block bg-{{branding.primaryColor}} text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-{{branding.primaryColorHover}} transition-colors duration-200 shadow-lg hover:shadow-xl">
+            <a href="{{hero.ctaLink}}" class="inline-block custom-primary text-white px-8 py-4 rounded-lg text-lg font-semibold hover:custom-primary-hover transition-colors duration-200 shadow-lg hover:shadow-xl">
               {{hero.ctaText}}
             </a>
             <p class="text-sm text-gray-600 italic">{{hero.note}}</p>
@@ -41,44 +92,48 @@
   </section>
 
   <!-- Features -->
-  <section class="py-20 bg-{{branding.sectionBgAlt}}">
+  <section class="py-20 custom-section-bg">
     <div class="max-w-7xl mx-auto px-6">
-      <h2 class="text-4xl font-bold text-center mb-16 text-gray-800">What You Get with BuildRunKit</h2>
-      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-        {{#features}}
-        <div class="p-8 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 text-center group">
-          <div class="bg-{{branding.primaryColor}}/10 p-4 rounded-full w-16 h-16 mx-auto mb-6 flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
-            <img src="{{icon}}" alt="" class="h-8 w-8">
+      <h2 class="text-4xl font-bold text-center mb-16 text-gray-800">{{featuresSection.title}}</h2>
+      <div class="flex justify-center">
+        <div class="grid gap-8 w-full max-w-6xl features-grid">
+          {{#features}}
+          <div class="p-8 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 text-center group">
+            <div class="custom-primary-bg-10 p-4 rounded-full w-16 h-16 mx-auto mb-6 flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
+              <img src="{{icon}}" alt="" class="h-8 w-8">
+            </div>
+            <h3 class="text-xl font-semibold mb-4 text-gray-800 text-center">{{title}}</h3>
+            <p class="text-gray-600 leading-relaxed text-center">{{description}}</p>
           </div>
-          <h3 class="text-xl font-semibold mb-4 text-gray-800">{{title}}</h3>
-          <p class="text-gray-600 leading-relaxed">{{description}}</p>
+          {{/features}}
         </div>
-        {{/features}}
       </div>
     </div>
   </section>
 
   <!-- How It Works -->
   <section class="py-20 max-w-6xl mx-auto px-6">
-    <h2 class="text-4xl font-bold mb-16 text-center text-gray-800">How It Works</h2>
-    <div class="grid md:grid-cols-5 gap-6">
-      {{#howItWorks}}
-      <div class="text-center group">
-        <div class="bg-{{branding.primaryColor}} text-white w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold mx-auto mb-4 group-hover:scale-110 transition-transform duration-200">
-          {{@index}}
+    <h2 class="text-4xl font-bold mb-16 text-center text-gray-800">{{howItWorksSection.title}}</h2>
+    <div class="flex justify-center">
+      <div class="grid gap-6 w-full max-w-5xl how-it-works-grid">
+        {{#howItWorks}}
+        <div class="text-center group">
+          <div class="custom-primary text-white w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold mx-auto mb-4 group-hover:scale-110 transition-transform duration-200">
+            {{@index}}
+          </div>
+          <p class="text-lg text-gray-700 leading-relaxed text-center">{{.}}</p>
         </div>
-        <p class="text-lg text-gray-700 leading-relaxed">{{.}}</p>
+        {{/howItWorks}}
       </div>
-      {{/howItWorks}}
     </div>
   </section>
 
   <!-- Offer -->
-  <section id="apply" class="py-20 bg-gradient-to-r from-{{branding.primaryColor}}/10 to-{{branding.secondaryColor}}/10 text-center">
+  <section id="apply" class="py-20 custom-gradient text-center">
     <div class="max-w-4xl mx-auto px-6">
       <h2 class="text-4xl font-bold mb-6 text-gray-800">{{offer.headline}}</h2>
       <p class="text-xl mb-8 text-gray-700 leading-relaxed">{{offer.description}}</p>
-      <a href="{{offer.ctaLink}}" class="inline-block bg-{{branding.primaryColor}} text-white px-10 py-5 rounded-lg text-xl font-semibold hover:bg-{{branding.primaryColorHover}} transition-colors duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+      <a href="{{offer.ctaLink}}" class="inline-block custom-primary text-white px-10 py-5 rounded-lg text-xl font-semibold hover:custom-primary-hover transition-colors duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
         {{offer.ctaText}}
       </a>
     </div>
@@ -98,16 +153,94 @@
   </section>
 
   <!-- Footer -->
-  <footer class="bg-gray-900 text-white py-16 text-center">
+  <footer class="py-16 text-center" style="background-color: {{branding.footerBgColor}}; color: {{branding.footerTextColor}};">
     <div class="max-w-6xl mx-auto px-6">
-      <div class="flex justify-center space-x-8 mb-8">
-        <a href="{{socialLinks.twitter}}" class="text-gray-300 hover:text-white transition-colors duration-200">Twitter</a>
-        <a href="{{socialLinks.linkedin}}" class="text-gray-300 hover:text-white transition-colors duration-200">LinkedIn</a>
-        <a href="{{socialLinks.facebook}}" class="text-gray-300 hover:text-white transition-colors duration-200">Facebook</a>
+      <div class="flex justify-center space-x-6 mb-8 flex-wrap">
+        {{#socialLinks.twitter}}
+        <a href="{{socialLinks.twitter}}" class="hover:opacity-80 transition-opacity duration-200" style="color: {{branding.footerTextColor}};" aria-label="Follow us on Twitter">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"/>
+          </svg>
+        </a>
+        {{/socialLinks.twitter}}
+        
+        {{#socialLinks.linkedin}}
+        <a href="{{socialLinks.linkedin}}" class="hover:opacity-80 transition-opacity duration-200" style="color: {{branding.footerTextColor}};" aria-label="Connect with us on LinkedIn">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+          </svg>
+        </a>
+        {{/socialLinks.linkedin}}
+        
+        {{#socialLinks.facebook}}
+        <a href="{{socialLinks.facebook}}" class="hover:opacity-80 transition-opacity duration-200" style="color: {{branding.footerTextColor}};" aria-label="Like us on Facebook">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+          </svg>
+        </a>
+        {{/socialLinks.facebook}}
+        
+        {{#socialLinks.whatsapp}}
+        <a href="{{socialLinks.whatsapp}}" class="hover:opacity-80 transition-opacity duration-200" style="color: {{branding.footerTextColor}};" aria-label="Message us on WhatsApp">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
+          </svg>
+        </a>
+        {{/socialLinks.whatsapp}}
+        
+        {{#socialLinks.pinterest}}
+        <a href="{{socialLinks.pinterest}}" class="hover:opacity-80 transition-opacity duration-200" style="color: {{branding.footerTextColor}};" aria-label="Follow us on Pinterest">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.174-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.402.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.357-.629-2.746-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24.009 12.017 24.009c6.624 0 11.99-5.367 11.99-11.988C24.007 5.367 18.641.001 12.017.001z"/>
+          </svg>
+        </a>
+        {{/socialLinks.pinterest}}
+        
+        {{#socialLinks.instagram}}
+        <a href="{{socialLinks.instagram}}" class="hover:opacity-80 transition-opacity duration-200" style="color: {{branding.footerTextColor}};" aria-label="Follow us on Instagram">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+          </svg>
+        </a>
+        {{/socialLinks.instagram}}
+        
+        {{#socialLinks.tiktok}}
+        <a href="{{socialLinks.tiktok}}" class="hover:opacity-80 transition-opacity duration-200" style="color: {{branding.footerTextColor}};" aria-label="Follow us on TikTok">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
+          </svg>
+        </a>
+        {{/socialLinks.tiktok}}
+        
+        {{#socialLinks.mastodon}}
+        <a href="{{socialLinks.mastodon}}" class="hover:opacity-80 transition-opacity duration-200" style="color: {{branding.footerTextColor}};" aria-label="Follow us on Mastodon">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12.103 0C5.442 0 .102 5.34.102 12c0 5.991 3.633 11.339 9.26 13.573.5.9.975 1.853 1.416 2.83.5-1.139 1.229-2.269 1.948-3.39-.698-.25-1.383-.533-2.055-.84-1.133-.5-2.444-1.08-3.843-1.714C4.92 15.123 4.5 13.5 4.5 12c0-4.142 3.458-7.5 7.5-7.5s7.5 3.358 7.5 7.5c0 1.5-.42 3.123-1.165 4.523-1.399.634-2.71 1.214-3.843 1.714-.672.307-1.357.59-2.055.84.719 1.121 1.448 2.251 1.948 3.39.441-.977.916-1.93 1.416-2.83C20.47 23.339 24.103 17.991 24.103 12c0-6.66-5.34-12-12-12z"/>
+          </svg>
+        </a>
+        {{/socialLinks.mastodon}}
+        
+        {{#socialLinks.bluesky}}
+        <a href="{{socialLinks.bluesky}}" class="hover:opacity-80 transition-opacity duration-200" style="color: {{branding.footerTextColor}};" aria-label="Follow us on Bluesky">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12.002 0a12 12 0 1 0 12 12 12 12 0 0 0-12-12zM5.017 19.49a7.977 7.977 0 0 1 6.983-6.983 7.977 7.977 0 0 1-6.983 6.983zm7.977-7.977a7.977 7.977 0 0 1 6.983 6.983 7.977 7.977 0 0 1-6.983-6.983z"/>
+          </svg>
+        </a>
+        {{/socialLinks.bluesky}}
       </div>
-      <p class="text-gray-400">{{footer.copyright}}</p>
+      <p style="color: {{branding.footerTextColor}};">{{footer.copyright}}</p>
     </div>
   </footer>
 
+  <script>
+    // Set CSS custom properties for dynamic grid columns
+    document.addEventListener('DOMContentLoaded', function() {
+      const featuresCount = {{features.length}};
+      const howItWorksCount = {{howItWorks.length}};
+      
+      document.documentElement.style.setProperty('--features-count', featuresCount);
+      document.documentElement.style.setProperty('--how-it-works-count', howItWorksCount);
+    });
+  </script>
 </body>
 </html>

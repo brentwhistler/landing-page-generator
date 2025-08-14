@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { createDefaultTemplate } from '../types/template';
+import { loadDefaultTemplateData } from '../lib/templateRenderer';
 
 const TemplateContext = createContext();
 
@@ -107,17 +108,51 @@ function templateReducer(state, action) {
 export function TemplateProvider({ children }) {
   const [state, dispatch] = useReducer(templateReducer, initialState);
 
-  // Load templates from localStorage on mount
+  // Load templates from localStorage and external template.json on mount
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      try {
-        const templates = JSON.parse(saved);
-        dispatch({ type: ACTIONS.LOAD_TEMPLATES, payload: templates });
-      } catch (error) {
-        console.error('Failed to load templates from storage:', error);
+    const loadTemplates = async () => {
+      // First try to load from localStorage
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        try {
+          const templates = JSON.parse(saved);
+          dispatch({ type: ACTIONS.LOAD_TEMPLATES, payload: templates });
+        } catch (error) {
+          console.error('Failed to load templates from storage:', error);
+        }
       }
-    }
+      
+      // Then try to load external template.json
+      try {
+        const externalTemplateData = await loadDefaultTemplateData();
+        if (externalTemplateData) {
+          // Create a template from the external data
+          const externalTemplate = {
+            id: crypto.randomUUID(),
+            name: externalTemplateData.site?.title || 'External Template',
+            description: 'Loaded from template.json',
+            created: new Date(),
+            modified: new Date(),
+            data: externalTemplateData
+          };
+          
+          // Set this as the current template
+          dispatch({ type: ACTIONS.SET_CURRENT_TEMPLATE, payload: externalTemplate });
+          
+          // Also save it to the templates list
+          dispatch({ type: ACTIONS.SAVE_TEMPLATE, payload: externalTemplate });
+          
+          console.log('Loaded external template.json successfully');
+        }
+      } catch (error) {
+        console.log('No external template.json found, using default template');
+        // If external template fails, create a new default template
+        const defaultTemplate = createDefaultTemplate();
+        dispatch({ type: ACTIONS.SET_CURRENT_TEMPLATE, payload: defaultTemplate });
+      }
+    };
+    
+    loadTemplates();
   }, []);
 
   // Save templates to localStorage whenever they change

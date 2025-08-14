@@ -54,7 +54,10 @@ export function TemplateEditor() {
               Features Section
             </AccordionTrigger>
             <AccordionContent>
-              <FeaturesSection data={currentTemplate.data.features} />
+              <FeaturesSection 
+                data={currentTemplate.data.features} 
+                sectionData={currentTemplate.data.featuresSection}
+              />
             </AccordionContent>
           </AccordionItem>
 
@@ -63,7 +66,10 @@ export function TemplateEditor() {
               How It Works
             </AccordionTrigger>
             <AccordionContent>
-              <HowItWorksSection data={currentTemplate.data.howItWorks} />
+              <HowItWorksSection 
+                data={currentTemplate.data.howItWorks} 
+                sectionData={currentTemplate.data.howItWorksSection}
+              />
             </AccordionContent>
           </AccordionItem>
 

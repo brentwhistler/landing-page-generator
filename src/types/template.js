@@ -14,15 +14,14 @@ export const createDefaultTemplate = () => ({
       headerElements: '<!-- GA / Pixel Scripts -->'
     },
     branding: {
-      primaryColor: 'indigo-600',
-      primaryColorHover: 'indigo-700',
-      secondaryColor: 'yellow-500',
-      bgColor: 'gray-50',
-      sectionBgAlt: 'gray-100',
-      textColor: 'gray-800',
-      fontFamily: 'font-sans',
-      headingSize: 'text-4xl',
-      bodySize: 'text-lg'
+      primaryColor: '#3b82f6',
+      primaryColorHover: '#2563eb',
+      secondaryColor: '#f59e0b',
+      bgColor: '#f9fafb',
+      sectionBgAlt: '#f3f4f6',
+      textColor: '#1f2937',
+      footerBgColor: '#f59e0b',
+      footerTextColor: '#ffffff'
     },
     hero: {
       headline: 'Your Amazing Product',
@@ -31,6 +30,9 @@ export const createDefaultTemplate = () => ({
       ctaLink: '#apply',
       note: 'No credit card required.',
       heroImage: '/assets/hero-image.png'
+    },
+    featuresSection: {
+      title: 'Features'
     },
     features: [
       {
@@ -44,6 +46,9 @@ export const createDefaultTemplate = () => ({
         icon: '/assets/icons/feature2.svg'
       }
     ],
+    howItWorksSection: {
+      title: 'How It Works'
+    },
     howItWorks: [
       'Step one description',
       'Step two description',
@@ -68,7 +73,13 @@ export const createDefaultTemplate = () => ({
     socialLinks: {
       twitter: 'https://twitter.com/yourcompany',
       linkedin: 'https://linkedin.com/company/yourcompany',
-      facebook: 'https://facebook.com/yourcompany'
+      facebook: 'https://facebook.com/yourcompany',
+      whatsapp: 'https://wa.me/1234567890',
+      pinterest: 'https://pinterest.com/yourcompany',
+      instagram: 'https://instagram.com/yourcompany',
+      tiktok: 'https://tiktok.com/@yourcompany',
+      mastodon: 'https://mastodon.social/@yourcompany',
+      bluesky: 'https://bsky.app/profile/yourcompany.bsky.social'
     },
     footer: {
       copyright: '© 2025 Your Company. All rights reserved.'

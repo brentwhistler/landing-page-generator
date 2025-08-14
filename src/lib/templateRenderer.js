@@ -14,8 +14,11 @@ export class TemplateRenderer {
     // Replace simple variables {{variable.path}}
     result = this.replaceVariables(result, this.data);
     
-    // Handle loops {{#array}}...{{/array}}
+    // Handle loops {{#array}}...{{/array}} FIRST
     result = this.handleLoops(result, this.data);
+    
+    // Handle conditionals {{#variable}}...{{/variable}} AFTER loops
+    result = this.handleConditionals(result, this.data);
     
     return result;
   }
@@ -25,6 +28,23 @@ export class TemplateRenderer {
       const fullPath = prefix ? `${prefix}.${path}` : path;
       const value = this.getNestedValue(data, path);
       return value !== undefined ? value : match;
+    });
+  }
+
+  handleConditionals(template, data) {
+    // Only handle socialLinks conditionals specifically to avoid conflicts
+    const socialConditionalRegex = /\{\{#socialLinks\.(\w+)\}\}([\s\S]*?)\{\{\/socialLinks\.\1\}\}/g;
+    
+    return template.replace(socialConditionalRegex, (match, platform, content) => {
+      const value = data.socialLinks?.[platform];
+      
+      // If the social link exists and has a value, return the content
+      if (value && value.trim() !== '') {
+        return content;
+      }
+      
+      // If the social link is empty or undefined, return empty string
+      return '';
     });
   }
 
@@ -39,9 +59,12 @@ export class TemplateRenderer {
         return '';
       }
       
-      return array.map(item => {
+      return array.map((item, index) => {
         // Handle {{.}} for current item
         let itemContent = content.replace(/\{\{\.\}\}/g, item);
+        
+        // Handle {{@index}} for array index
+        itemContent = itemContent.replace(/\{\{@index\}\}/g, index + 1);
         
         // Handle object properties {{property}}
         if (typeof item === 'object') {
@@ -55,7 +78,17 @@ export class TemplateRenderer {
 
   getNestedValue(obj, path) {
     return path.split('.').reduce((current, key) => {
-      return current && current[key] !== undefined ? current[key] : undefined;
+      if (current && current[key] !== undefined) {
+        return current[key];
+      }
+      // Handle array indexing syntax like "howItWorks.[0]"
+      if (key.startsWith('[') && key.endsWith(']')) {
+        const index = parseInt(key.slice(1, -1));
+        if (Array.isArray(current) && !isNaN(index) && index >= 0 && index < current.length) {
+          return current[index];
+        }
+      }
+      return undefined;
     }, obj);
   }
 }

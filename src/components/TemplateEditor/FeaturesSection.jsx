@@ -7,8 +7,17 @@ import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Plus, Trash2, GripVertical } from 'lucide-react';
 
-export function FeaturesSection({ data }) {
+export function FeaturesSection({ data, sectionData }) {
   const { actions } = useTemplate();
+
+  const handleSectionTitleChange = (value) => {
+    actions.updateTemplateData({
+      featuresSection: {
+        ...sectionData,
+        title: value
+      }
+    });
+  };
 
   const handleChange = (index, field, value) => {
     const updatedFeatures = [...data];
@@ -66,6 +75,16 @@ export function FeaturesSection({ data }) {
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="section-title">Section Title</Label>
+          <Input
+            id="section-title"
+            value={sectionData?.title || ''}
+            onChange={(e) => handleSectionTitleChange(e.target.value)}
+            placeholder="Features Section Title"
+          />
+        </div>
+        
         {data.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
             <p>No features added yet.</p>

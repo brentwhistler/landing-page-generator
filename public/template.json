@@ -1,0 +1,75 @@
+{
+  "site": {
+    "title": "BuildRunKit - Plan. Build. Run.",
+    "favicon": "/assets/brk-ico.png",
+    "logoUrl": "/assets/logo.svg",
+    "headerElements": "<!-- GA / Pixel Scripts -->"
+  },
+  "branding": {
+    "primaryColor": "#ff7e00",
+    "primaryColorHover": "indigo-700",
+    "secondaryColor": "#4b0082",
+    "bgColor": "gray-50",
+    "sectionBgAlt": "gray-100",
+    "textColor": "gray-800",
+    "fontFamily": "font-sans",
+    "headingSize": "text-4xl",
+    "bodySize": "text-lg"
+  },
+  "hero": {
+    "headline": "The Operating System for Business Coaches Who Want to Scale",
+    "subheadline": "BuildRunKit helps you productize your expertise, deliver measurable ROI, and grow your coaching practice with white-label tools, guided journeys, and automation.",
+    "ctaText": "Apply to Become a Founding Coach",
+    "ctaLink": "#apply",
+    "note": "Only 20 seats available for the Steering Committee - Lifetime perks included.",
+    "heroImage": "/assets/hero-image.png"
+  },
+  "features": [
+    {
+      "title": "Guided Founder Journeys",
+      "description": "Ready-to-use client roadmaps that show measurable progress.",
+      "icon": "/assets/icons/journeys.svg"
+    },
+    {
+      "title": "Automated Research & Reports",
+      "description": "Generate market analysis and insights in minutes, not days.",
+      "icon": "/assets/icons/reports.svg"
+    },
+    {
+      "title": "White-Label Toolkits",
+      "description": "Deliver premium experiences under your own brand.",
+      "icon": "/assets/icons/whitelabel.svg"
+    },
+    {
+      "title": "API-First Automations",
+      "description": "Integrate and scale your services without custom dev work.",
+      "icon": "/assets/icons/api.svg"
+    }
+  ],
+  "howItWorks": [
+    "Apply to become a Founding Coach.",
+    "Get onboarded with premium templates and journeys.",
+    "Co-create new features with direct roadmap input.",
+    "Deploy BuildRunKit with your clients.",
+    "Scale your business while saving hours each week."
+  ],
+  "offer": {
+    "headline": "Join the Founding Coach Steering Committee",
+    "description": "Be one of 20 coaches to shape the future of BuildRunKit. Get lifetime discounts, roadmap voting power, and revenue share opportunities.",
+    "ctaText": "Apply Now",
+    "ctaLink": "#apply"
+  },
+  "faq": [
+    { "q": "Do I need technical skills?", "a": "No. BuildRunKit is designed to be turnkey — no coding required." },
+    { "q": "Can I white-label the tools?", "a": "Yes. Founding Coaches get early access to white-label features." },
+    { "q": "When does the beta start?", "a": "Beta access is open now, with full launch planned for early 2026." }
+  ],
+  "socialLinks": {
+    "twitter": "https://x.com/buildrunkit",
+    "linkedin": "https://linkedin.com/company/buildrunkit",
+    "facebook": "https://facebook.com/buildrunkit"
+  },
+  "footer": {
+    "copyright": "© 2025 BuildRunKit. All rights reserved."
+  }
+}

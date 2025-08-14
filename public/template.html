@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{site.title}}</title>
+  <meta name="description" content="{{hero.subheadline}}">
+  <link rel="icon" href="{{site.favicon}}">
+  {{site.headerElements}}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+</head>
+<body class="bg-{{branding.bgColor}} text-{{branding.textColor}} {{branding.fontFamily}}">
+
+  <!-- Hero -->
+  <section class="bg-white shadow-md">
+    <div class="max-w-7xl mx-auto px-6 py-8">
+      <!-- Logo in upper left -->
+      <div class="mb-12">
+        <img src="{{site.logoUrl}}" alt="Logo" class="h-16">
+      </div>
+      
+      <!-- Hero content - left side -->
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="text-left">
+          <h1 class="{{branding.headingSize}} font-bold mb-6 leading-tight">{{hero.headline}}</h1>
+          <p class="{{branding.bodySize}} mb-8 text-gray-700 leading-relaxed">{{hero.subheadline}}</p>
+          <div class="space-y-4">
+            <a href="{{hero.ctaLink}}" class="inline-block bg-{{branding.primaryColor}} text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-{{branding.primaryColorHover}} transition-colors duration-200 shadow-lg hover:shadow-xl">
+              {{hero.ctaText}}
+            </a>
+            <p class="text-sm text-gray-600 italic">{{hero.note}}</p>
+          </div>
+        </div>
+        
+        <!-- Hero image - right side -->
+        <div class="flex justify-center lg:justify-end">
+          <img src="{{hero.heroImage}}" alt="Hero Image" class="max-w-lg w-full h-auto rounded-lg shadow-2xl">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="py-20 bg-{{branding.sectionBgAlt}}">
+    <div class="max-w-7xl mx-auto px-6">
+      <h2 class="text-4xl font-bold text-center mb-16 text-gray-800">What You Get with BuildRunKit</h2>
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {{#features}}
+        <div class="p-8 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 text-center group">
+          <div class="bg-{{branding.primaryColor}}/10 p-4 rounded-full w-16 h-16 mx-auto mb-6 flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
+            <img src="{{icon}}" alt="" class="h-8 w-8">
+          </div>
+          <h3 class="text-xl font-semibold mb-4 text-gray-800">{{title}}</h3>
+          <p class="text-gray-600 leading-relaxed">{{description}}</p>
+        </div>
+        {{/features}}
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="py-20 max-w-6xl mx-auto px-6">
+    <h2 class="text-4xl font-bold mb-16 text-center text-gray-800">How It Works</h2>
+    <div class="grid md:grid-cols-5 gap-6">
+      {{#howItWorks}}
+      <div class="text-center group">
+        <div class="bg-{{branding.primaryColor}} text-white w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold mx-auto mb-4 group-hover:scale-110 transition-transform duration-200">
+          {{@index}}
+        </div>
+        <p class="text-lg text-gray-700 leading-relaxed">{{.}}</p>
+      </div>
+      {{/howItWorks}}
+    </div>
+  </section>
+
+  <!-- Offer -->
+  <section id="apply" class="py-20 bg-gradient-to-r from-{{branding.primaryColor}}/10 to-{{branding.secondaryColor}}/10 text-center">
+    <div class="max-w-4xl mx-auto px-6">
+      <h2 class="text-4xl font-bold mb-6 text-gray-800">{{offer.headline}}</h2>
+      <p class="text-xl mb-8 text-gray-700 leading-relaxed">{{offer.description}}</p>
+      <a href="{{offer.ctaLink}}" class="inline-block bg-{{branding.primaryColor}} text-white px-10 py-5 rounded-lg text-xl font-semibold hover:bg-{{branding.primaryColorHover}} transition-colors duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+        {{offer.ctaText}}
+      </a>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="py-20 max-w-4xl mx-auto px-6">
+    <h2 class="text-4xl font-bold mb-16 text-center text-gray-800">FAQ</h2>
+    <div class="space-y-8">
+      {{#faq}}
+      <div class="bg-white p-8 rounded-2xl shadow-lg">
+        <h3 class="text-xl font-semibold mb-4 text-gray-800">{{q}}</h3>
+        <p class="text-gray-600 leading-relaxed">{{a}}</p>
+      </div>
+      {{/faq}}
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-16 text-center">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="flex justify-center space-x-8 mb-8">
+        <a href="{{socialLinks.twitter}}" class="text-gray-300 hover:text-white transition-colors duration-200">Twitter</a>
+        <a href="{{socialLinks.linkedin}}" class="text-gray-300 hover:text-white transition-colors duration-200">LinkedIn</a>
+        <a href="{{socialLinks.facebook}}" class="text-gray-300 hover:text-white transition-colors duration-200">Facebook</a>
+      </div>
+      <p class="text-gray-400">{{footer.copyright}}</p>
+    </div>
+  </footer>
+
+</body>
+</html>

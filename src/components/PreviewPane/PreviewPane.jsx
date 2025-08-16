@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTemplate } from '../../hooks/useTemplateContext';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
@@ -23,35 +23,67 @@ import {
 } from '../ui/dropdown-menu';
 
 export function PreviewPane() {
-  const { state } = useTemplate();
+  const { state, actions } = useTemplate();
   const { currentTemplate, assets } = state;
-  const [previewMode, setPreviewMode] = useState('desktop');
   const [previewHtml, setPreviewHtml] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [previewMode, setPreviewMode] = useState('desktop');
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [totalAssetCount, setTotalAssetCount] = useState(0);
 
+  // Device size configurations
   const deviceSizes = {
     desktop: { width: '100%', height: '100%', icon: Monitor },
     tablet: { width: '768px', height: '1024px', icon: Tablet },
     mobile: { width: '375px', height: '667px', icon: Smartphone }
   };
 
+  // Count both uploaded and static assets
   useEffect(() => {
-    generatePreview();
-  }, [currentTemplate]);
+    const countStaticAssets = () => {
+      if (!currentTemplate?.data) return;
+      
+      let staticCount = 0;
+      const processedPaths = new Set();
+      
+      const countFromObject = (obj) => {
+        if (typeof obj === 'string') {
+          if (obj.startsWith('/assets/') && !processedPaths.has(obj)) {
+            processedPaths.add(obj);
+            staticCount++;
+          }
+        } else if (Array.isArray(obj)) {
+          obj.forEach(countFromObject);
+        } else if (obj && typeof obj === 'object') {
+          Object.values(obj).forEach(countFromObject);
+        }
+      };
+      
+      countFromObject(currentTemplate.data);
+      setTotalAssetCount(assets.length + staticCount);
+    };
+    
+    countStaticAssets();
+  }, [currentTemplate?.data, assets.length]);
 
-  const generatePreview = async () => {
+  const generatePreview = useCallback(async () => {
+    if (!currentTemplate) return;
+    
     setIsLoading(true);
     try {
       const html = await generateLandingPage(currentTemplate.data, assets);
       setPreviewHtml(html);
     } catch (error) {
-      console.error('Preview generation failed:', error);
-      toast.error("Failed to generate preview. Please check your template data.");
+      console.error('Failed to generate preview:', error);
+      toast.error('Failed to generate preview. Please check your template data.');
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [currentTemplate, assets]);
+
+  useEffect(() => {
+    generatePreview();
+  }, [generatePreview]);
 
   const handleExportHtml = async () => {
     try {
@@ -65,8 +97,8 @@ export function PreviewPane() {
 
   const handleExportZip = async () => {
     try {
-      if (assets.length === 0) {
-        toast.error("No assets to export. Use HTML export for pages without uploaded assets.");
+      if (totalAssetCount === 0) {
+        toast.error("No assets to export. Use HTML export for pages without assets.");
         return;
       }
       
@@ -157,10 +189,10 @@ export function PreviewPane() {
                   <Download className="h-4 w-4 mr-2" />
                   HTML File (Embedded Images)
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleExportZip} disabled={assets.length === 0}>
+                <DropdownMenuItem onClick={handleExportZip} disabled={totalAssetCount === 0}>
                   <Download className="h-4 w-4 mr-2" />
                   ZIP Package (Separate Assets)
-                  {assets.length === 0 && <span className="ml-2 text-xs text-muted-foreground">(No assets)</span>}
+                  {totalAssetCount === 0 && <span className="ml-2 text-xs text-muted-foreground">(No assets)</span>}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

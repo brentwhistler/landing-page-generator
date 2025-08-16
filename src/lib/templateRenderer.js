@@ -118,14 +118,78 @@ export const loadDefaultTemplateData = async () => {
   }
 };
 
+// Helper function to fetch static assets and convert to base64
+const fetchStaticAsset = async (assetPath) => {
+  try {
+    // Remove leading slash if present
+    const cleanPath = assetPath.startsWith('/') ? assetPath.substring(1) : assetPath;
+    
+    const response = await fetch(`/${cleanPath}`);
+    if (!response.ok) {
+      console.warn(`Failed to fetch static asset: ${assetPath}`);
+      return null;
+    }
+    
+    const blob = await response.blob();
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.readAsDataURL(blob);
+    });
+  } catch (error) {
+    console.warn(`Error fetching static asset ${assetPath}:`, error);
+    return null;
+  }
+};
+
+// Helper function to collect all static assets from template data
+const collectStaticAssets = async (templateData) => {
+  const staticAssets = [];
+  const processedPaths = new Set();
+  
+  const collectFromObject = async (obj) => {
+    if (typeof obj === 'string') {
+      // Check if this is a static asset path
+      if (obj.startsWith('/assets/') && !processedPaths.has(obj)) {
+        processedPaths.add(obj);
+        const base64Data = await fetchStaticAsset(obj);
+        if (base64Data) {
+          const fileName = obj.split('/').pop();
+          staticAssets.push({
+            name: fileName,
+            path: obj,
+            data: base64Data,
+            type: 'static'
+          });
+        }
+      }
+    } else if (Array.isArray(obj)) {
+      for (const item of obj) {
+        await collectFromObject(item);
+      }
+    } else if (obj && typeof obj === 'object') {
+      for (const value of Object.values(obj)) {
+        await collectFromObject(value);
+      }
+    }
+  };
+  
+  await collectFromObject(templateData);
+  return staticAssets;
+};
+
 export const generateLandingPage = async (templateData, assets = []) => {
   const templateHtml = await loadTemplateFile();
   if (!templateHtml) {
     throw new Error('Failed to load template file');
   }
   
+  // Collect static assets and combine with uploaded assets
+  const staticAssets = await collectStaticAssets(templateData);
+  const allAssets = [...assets, ...staticAssets];
+  
   // Replace asset paths with base64 data for preview
-  const processedData = replaceAssetPaths(templateData, assets);
+  const processedData = replaceAssetPaths(templateData, allAssets);
   
   return renderTemplate(templateHtml, processedData);
 };
@@ -184,11 +248,22 @@ export const downloadZip = async (templateData, assets, templateName) => {
   try {
     const zip = new JSZip();
     
+    // Collect static assets and combine with uploaded assets
+    const staticAssets = await collectStaticAssets(templateData);
+    const allAssets = [...assets, ...staticAssets];
+    
+    console.log('ZIP Export - Assets found:', {
+      uploadedAssets: assets.length,
+      staticAssets: staticAssets.length,
+      totalAssets: allAssets.length,
+      staticAssetPaths: staticAssets.map(a => a.path)
+    });
+    
     // Convert absolute paths to relative paths for local file usage
     const localTemplateData = convertPathsToRelative(templateData);
     
     // Generate HTML with relative asset paths for local usage
-    const html = await generateLandingPage(localTemplateData, assets); // Use relative paths for ZIP export
+    const html = await generateLandingPage(localTemplateData, allAssets);
     
     // Add the HTML file to ZIP
     zip.file(`${templateName}.html`, html);
@@ -196,13 +271,36 @@ export const downloadZip = async (templateData, assets, templateName) => {
     // Create assets folder and add all assets
     const assetsFolder = zip.folder('assets');
     
-    for (const asset of assets) {
+    for (const asset of allAssets) {
       // Convert base64 data URL back to binary data
       const base64Data = asset.data.split(',')[1]; // Remove data:mime;base64, prefix
       const binaryData = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0));
       
-      // Add to assets folder with original filename
-      assetsFolder.file(asset.name, binaryData);
+      // Preserve directory structure in ZIP
+      if (asset.path.includes('/')) {
+        // Extract the path after /assets/ to maintain subdirectory structure
+        const relativePath = asset.path.replace('/assets/', '');
+        const pathParts = relativePath.split('/');
+        const fileName = pathParts.pop(); // Get the filename
+        
+        if (pathParts.length > 0) {
+          // Create nested folder structure
+          let currentFolder = assetsFolder;
+          for (const folderName of pathParts) {
+            currentFolder = currentFolder.folder(folderName);
+          }
+          currentFolder.file(fileName, binaryData);
+          console.log(`Added to ZIP: assets/${relativePath}`);
+        } else {
+          // File is directly in assets folder
+          assetsFolder.file(fileName, binaryData);
+          console.log(`Added to ZIP: assets/${fileName}`);
+        }
+      } else {
+        // File is directly in assets folder
+        assetsFolder.file(asset.name, binaryData);
+        console.log(`Added to ZIP: assets/${asset.name}`);
+      }
     }
     
     // Generate ZIP and download
